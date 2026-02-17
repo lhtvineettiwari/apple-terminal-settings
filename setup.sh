@@ -86,9 +86,16 @@ bindkey '^[[B' history-substring-search-down
 
 # Colorful ls with icons
 if command -v eza >/dev/null 2>&1; then
-  alias ls='eza --icons=auto --group-directories-first --color=always'
-  alias ll='eza -la --icons=auto --group-directories-first --git --color=always'
-  alias la='eza -la --icons=auto --group-directories-first --color=always'
+  # Apple Terminal can miss some Nerd Font glyphs; use color-only there.
+  if [[ "\$TERM_PROGRAM" == "Apple_Terminal" ]]; then
+    alias ls='eza --icons=never --group-directories-first --color=always'
+    alias ll='eza -la --icons=never --group-directories-first --git --color=always'
+    alias la='eza -la --icons=never --group-directories-first --color=always'
+  else
+    alias ls='eza --icons=auto --group-directories-first --color=always'
+    alias ll='eza -la --icons=auto --group-directories-first --git --color=always'
+    alias la='eza -la --icons=auto --group-directories-first --color=always'
+  fi
 else
   alias ls='ls -G'
   alias ll='ls -lahG'
@@ -103,3 +110,6 @@ echo "Run: source \"$ZSHRC\""
 echo "Then open iTerm2 and set fonts:"
 echo "  1) Font: MesloLGS Nerd Font Mono"
 echo "  2) Enable non-ASCII font and set: Symbols Nerd Font Mono"
+echo "Apple Terminal note:"
+echo "  Some icons may still be missing in Apple Terminal."
+echo "  This setup automatically uses color-only ls output there."
